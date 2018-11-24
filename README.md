@@ -1,24 +1,35 @@
-Efficient field operations for Curve25519's prime (2^255)-19 for ARM Cortex M4 microcontrollers.
-
 Repository for the field arithmetics and X25519 as reported in 
-https://eprint.iacr.org/2018/286 
-"AuCPace: Efficient verifier-based PAKE protocol tailored for the IIoT".
+"AuCPace: Efficient verifier-based PAKE protocol tailored for the IIoT"
+https://eprint.iacr.org/2018/286 .
 
 As one specific example on how to use the field operations, this repository also 
-includes an efficient implementation for constant-time X25519 on the ARM Cortex M4. 
+includes an efficient implementation for constant-time X25519 on the ARM Cortex M4.
+
+The original speed benchmarking had been implemented in a closed-source development
+environment. This code here is a stripped version that only relies on open-source code.
+
+The project is based on a "hello-world" program from Joost Rijneveld. Thank's also for Niels
+Samwel for his help during setting up the project and for his help with 
+re-structuring the code such that it is only based on free sources. 
 
 The X25519 scalar multiplication could be configured for "swap data" or "swap pointers". 
-The "swap pointers" option is faster but must only be used if you are sure that your 
-stack is residing in internal memory of the microcontroller. 
+The "swap pointers" option is faster but *must* *only* *be* *used* *if* *you* *are* 
+*REALLY* *sure* *that* *your* *call* *stack* *is* *residing* *in* *internal* *memory*
+*of* *the* *microcontroller* *with* *perfectly* *deterministic* *execution* *timing*! 
 
 For this reason it's disabled by default and yield roughly 670k cycles instead of
 the ~626k cycles from the paper. (Have a look at the scalarmult function in order
 to change this setting).
- 
-The project is based on a "hello-world" program from Joost Rijneveld. Thank's also for Niels
-Samwel for his help during setting up the project and re-structuring the code for publication.
 
-The remarks below are almost a verbatime copy from Joost's hello world.
+You find also the code for the elligator using only one exponentiation. I'd like again
+to thank Mike Hamburg for his advice on how to use the inverse square root trick!
+
+Best regards,
+
+Björn Haase
+
+
+P.S.: The remarks below are almost a verbatime copy from Joost's hello world.
 
 ### Installation
 

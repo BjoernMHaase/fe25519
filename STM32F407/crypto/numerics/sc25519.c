@@ -1,9 +1,8 @@
-// Author: Bjoern Haase
+// Authors: Bjoern Haase, Niels Samwel 
 //
-// Public domain
+// License: CC0 1.0 (http://creativecommons.org/publicdomain/zero/1.0/legalcode)
 
 #include "../include/sc25519.h"
-#include "../include/randombytes.h"
 #include "../include/montgomery_reduction.h"
 
 #define BARRET_REDUCTION 1
@@ -357,66 +356,10 @@ sc25519_sqr(
 
 #endif
 
-#ifdef DH_RANDOMIZE_SCALAR
-#define RANDOM_MULTIPLE_NEEDED
-#else
-#ifdef SIGN_RANDOMIZE_SCALAR
-#define RANDOM_MULTIPLE_NEEDED
-#endif
-#endif
-
-
-#ifdef RANDOM_MULTIPLE_NEEDED
-
-static const UN_256bitValue numberOfPointsOnCurve25519 =
-{{
- 0x68,  0x9f,  0xae,  0xe7,  0xd2,  0x18,  0x93,  0xc0,
- 0xb2,  0xe6,  0xbc,  0x17,  0xf5,  0xce,  0xf7,  0xa6,
- 0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,
- 0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x80
-}};
-
-void
-sc25519_calculateRandomMultipleOfGroupOrder (UN_288bitValue *result)
-{
-    uint32_t multiplier;
-
-    int i;
-    uint64_t accu = 0;
-    uint32_t multiplierLow;
-    uint32_t multiplierHigh;
-
-    randombytes ((uint8_t *) &multiplier,4);
-        //multiplier <<= 3; // make sure that it is a multiple of 8.
-    multiplierLow = (uint16_t) multiplier;
-    multiplierHigh = multiplier >> 16;
-
-    for (i = 0; i < 8; i ++)
-    {
-        uint32_t multiplicant = numberOfPointsOnCurve25519.as_uint32_t [i];
-        uint32_t multiplicantLow = (uint16_t) multiplicant;
-        uint32_t multiplicantHigh = multiplicant >> 16;
-
-        accu += multiplierLow * multiplicantLow;
-        accu += ((uint64_t) (multiplierLow * multiplicantHigh)) << 16;
-        accu += ((uint64_t) (multiplierHigh * multiplicantLow)) << 16;
-
-        result->as_uint32_t[i] = (uint32_t) accu;
-        accu >>= 32;
-        accu += multiplierHigh * multiplicantHigh;
-    }
-    result->as_uint32_t[8] = (uint32_t) accu;
-}
-
-#endif
-
 /// convert the scalar s to a representation of 64 or 72 signed chars containing
 /// 4 bits each. (NAF-Form with values -8 .. + 8).
 /// This is done for speedup of the fixed-window scalar multiplication
 /// later on, that processes 4 bits in each step.
-/// If scalar randomization is activated by a compile switch,
-/// we will add a 127 bit random multiple of the group order to the scalar
-/// the length of the window4 result will increase by 64 bytes.
 void
 sc25519_window4(
     signed char    r[SC25519_WINDOW4_SIZE],
@@ -426,28 +369,11 @@ sc25519_window4(
     char          carry;
     uint8_t i;
 
-#ifdef SIGN_RANDOMIZE_SCALAR
-    UN_288bitValue randomAddend;
-
-    sc25519_calculateRandomMultipleOfGroupOrder (&randomAddend);
-
-    // Add the 8 words of the scalar and add the final carry to the last word.
-    randomAddend.as_uint32_t [8] += bigint_add (randomAddend.as_uint32_t,s->as_uint32_t,8);
-
-    for (i = 0; i < 36; i++)
-    {
-        // Fixme: This code won't work on big endian targets.
-        r[2 * i] = (randomAddend.as_uint8_t [i]) & 15;
-        r[2 * i + 1] = (randomAddend.as_uint8_t [i]) >> 4;
-    }
-
-#else
     for (i = 0; i < 32; i++)
     {
         r[2 * i] = s->as_uint8_t[i] & 15;
         r[2 * i + 1] = s->as_uint8_t[i] >> 4;
     }
-#endif
 
     /* Making the result signed and limited to the range -8 ... +8 for the signed NAF form. */
     carry = 0;
@@ -480,6 +406,7 @@ sc25519_window4(
  }
 
 // binary extended gcd algorithm based on Alg. 14.61 in the Handbook of Applied Cryptography
+//
 void sc25519_binary_extended_gcd(UN_256bitValue *R, const UN_256bitValue *X, const UN_256bitValue *Y) {
     UN_256bitValue B, D, v, u, g, x, y, zero;
     cpy_256bitvalue(&x, X);
@@ -527,6 +454,7 @@ void sc25519_binary_extended_gcd(UN_256bitValue *R, const UN_256bitValue *X, con
     cpy_256bitvalue(R, &D);
 }
 
+// Attention: Variable time execution due to the extended GCD algorithm!
 void sc25519_inverse(UN_256bitValue *R, const UN_256bitValue *X) {
     UN_256bitValue order = {{
         0xed, 0xd3, 0xf5, 0x5c, 0x1a, 0x63, 0x12, 0x58,

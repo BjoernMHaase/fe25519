@@ -2,7 +2,7 @@
   ============================ C/C++ HEADER FILE =============================
                             =======================                      
 
-    \file afe25519_pow2523.c
+    \file fe25519_pow2523.c
 
     Taken from avr-nacl project (Author: Michael Hutter, Peter Schwabe)
  

@@ -402,9 +402,6 @@ fe25519_mpyWith121666(
 #endif
 
 
-/// Used for fast randomization of field elements. Use 16 bit randomization constant
-/// since it's easy and fast to implement and it's repeated application is still considered
-/// to make statistical analysis very hard.
 void
 fe25519_mpyWith_uint16(
     fe25519*       inOut,

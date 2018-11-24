@@ -1,6 +1,6 @@
 // Author: Bjoern Haase
 //
-// Public domain
+// License: CC0 1.0 (http://creativecommons.org/publicdomain/zero/1.0/legalcode)
 
 #include "../include/bigint.h"
 
@@ -976,7 +976,8 @@ multiply288x288(
     }
 }
 
-/// Will be required for the poly1305 authentication algorithm.
+/// Was required for an old inefficient version of the poly1305 authentication algorithm.
+/// but is still kept.
 void
 multiply136x136(
     UN_272bitValue*       r,

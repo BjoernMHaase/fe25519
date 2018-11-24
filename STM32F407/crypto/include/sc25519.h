@@ -40,8 +40,7 @@ sc25519_from32bytes(
     const uint8_t x[32]
 );
 
-void
-sc25519_calculateRandomMultipleOfGroupOrder (UN_288bitValue *result);
+#define SC25519_WINDOW4_SIZE (64)
 
 #define SC25519_INITIALIZER_FOR_ONE_HALF { \
       0xf7,  0xe9,  0x7a,  0x2e,  0x8d,  0x31,  0x09,  0x2c,\
@@ -49,18 +48,9 @@ sc25519_calculateRandomMultipleOfGroupOrder (UN_288bitValue *result);
       0x00,  0x00,  0x00,  0x00,  0x00,  0x00,  0x00,  0x00,\
       0x00,  0x00,  0x00,  0x00,  0x00,  0x00,  0x00,  0x08 }
 
-#ifdef SIGN_RANDOMIZE_SCALAR
-#define SC25519_WINDOW4_SIZE (64 + 8)
-#else
-#define SC25519_WINDOW4_SIZE (64)
-#endif
-
 /// convert s to a representation of 64 signed chars containing
 /// 4 bits each. This is done for speedup of the scalar multiplication
 /// later on, that processes 4 bits in each step.
-///
-/// The size of the representation increases if the scalar is randomized
-/// by adding a random multiple of the group order.
 void
 sc25519_window4(
     signed char    r[SC25519_WINDOW4_SIZE],

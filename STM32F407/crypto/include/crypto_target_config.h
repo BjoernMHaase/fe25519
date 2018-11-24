@@ -13,17 +13,8 @@
 
     and the macros FORCE_INLINE and NO_INLINE
 
-    In the user specific target config header, it is possible to define the symbols
-
-
-    in order to make the library use user-supplied assembly optimized multiplication functions.
-
-    By defining the symbol
-
-    CRYPTO_TARGET_NO_CACHEMEM
-
-    the library may be requested to implement optimizations that would be insecure
-    on systems with cache memory.
+    In the target specific target config header, it is possible to define symbols activating
+    specific optimized assembly functions.
  
     \Author: B. Haase, Endress + Hauser Conducta GmbH & Co. KG
 

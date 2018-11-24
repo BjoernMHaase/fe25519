@@ -2,7 +2,7 @@
 //
 // Author: bjoern haase bjoern.m.haase@web.de 
 //
-// public domain
+// License: CC0 1.0 (http://creativecommons.org/publicdomain/zero/1.0/legalcode)
 //
 // Code is now tested on various target and on QEmu testsuites.
 

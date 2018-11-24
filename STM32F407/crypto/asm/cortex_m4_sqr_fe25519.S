@@ -5,7 +5,7 @@
 //
 // Author: Björn Haase (bjoern.m.haase@web.de) 
 // 
-// public domain
+// License: CC0 1.0 (http://creativecommons.org/publicdomain/zero/1.0/legalcode)
 //
 // Code is tested on various targets and on Qemu.
 
