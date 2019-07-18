@@ -17,7 +17,7 @@ The "swap pointers" option is faster but *must* *only* *be* *used* *if* *you* *a
 *REALLY* *sure* *that* *your* *call* *stack* *is* *residing* *in* *internal* *memory*
 *of* *the* *microcontroller* *with* *perfectly* *deterministic* *execution* *timing*! 
 
-For this reason it's disabled by default and yield roughly 670k cycles instead of
+For this reason it's disabled by default and yields roughly 670k cycles instead of
 the ~626k cycles from the paper. (Have a look at the scalarmult function in order
 to change this setting).
 
